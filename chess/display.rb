@@ -17,7 +17,7 @@ class Display
             #toggle here
             system('clear')
             @board.render(@cursor.cursor_pos, @cursor.selected)
-
+            break
         end
     end
 end

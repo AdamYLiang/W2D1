@@ -1,23 +1,38 @@
-require_relative 'nullpiece'
+require_relative 'pieces'
 class Board 
     attr_reader :grid
     def initialize
         @grid = place_pieces
+        assign_positions
 
     end
 
     def place_pieces
         array = []
+
+
         2.times do |i|
-            array << Array.new(8){Piece.new("black")}
+            array << Array.new(8){Rook.new(self, "black")}
         end
         4.times do |i|
-            array << Array.new(8){NullPiece.new("white")}
+            array << Array.new(8){NullPiece.new(self, "white")}
         end
         2.times do |i|
-            array << Array.new(8){Piece.new("white")}
+            array << Array.new(8){Piece.new(self, "white")}
         end
+
+        
         array
+    end
+
+    def assign_positions
+        (0..7).each do |i|
+            (0..7).each do |j|
+                next if grid[i][j].is_a?(NullPiece)
+                puts grid[i][j].to_s
+                grid[i][j].pos = [i,j]
+            end
+        end
     end
 
     def move_piece(start_pos, end_pos)
@@ -32,7 +47,7 @@ class Board
     end
 
     def valid_pos?(pos)
-        (0..7).include?(pos[0]) && (0..7).include?(pos[1])
+        pos[0].between?(0,7) && pos[1].between?(0,7)
     end
 
     def [](pos)
@@ -45,11 +60,15 @@ class Board
         grid[x][y] = val
     end
 
+    def empty?(pos)
+        self[pos].is_a?(NullPiece) 
+    end
+
     #Display.new(Board.new).render
     def render(cursor_pos, selected)
-        puts "  " + (0..7).to_a.join("    ")
+        puts "  " + ('a'..'h').to_a.join("    ")
         grid.each_with_index do |row, i|
-            string = "#{i} "
+            string = "#{8-i} "
             row.each_with_index do |position, j|
                 if [i,j] == cursor_pos
                     if selected 
@@ -58,7 +77,7 @@ class Board
                         string += "#{position}".colorize(:color => :blue, :background => :light_magenta)
                     end
                 else
-                    string += "#{position}".colorize(position.select_color) 
+                    string += "#{position}".colorize(position.color) 
                 end
                 string += "    "
             end
