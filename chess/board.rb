@@ -10,18 +10,19 @@ class Board
     def place_pieces
         array = []
 
+        #Create special pieces
+        #Create pawn row
+        array << special_row("black")
         array << Array.new(8){Pawn.new(self, "black")}
+        #Create singleton null x4
+        null = NullPiece.instance(self)
+        4.times do
+            array << Array.new(8,null)
+        end
+        #create pawn row
         array << Array.new(8){Pawn.new(self, "white")}
-        # 2.times do |i|
-        #     array << Array.new(8){Pawn.new(self, "black")}
-        # end
-        4.times do |i|
-            array << Array.new(8){NullPiece.new(self, "white")}
-        end
-        2.times do |i|
-            array << Array.new(8){Bishop.new(self, "white")}
-        end
-
+        #create special pieces.reverse
+        array << special_row("white")
         
         array
     end
@@ -29,8 +30,8 @@ class Board
     def assign_positions
         (0..7).each do |i|
             (0..7).each do |j|
-                next if grid[i][j].is_a?(NullPiece)
-                grid[i][j].pos = [i,j]
+                next if @grid[i][j].is_a?(NullPiece)
+                @grid[i][j].pos = [i,j]
             end
         end
     end
@@ -42,7 +43,6 @@ class Board
         raise "Can't move to end_pos" unless self[end_pos].is_a?(NullPiece)
 
         self[end_pos] = self[start_pos]
-        #grid[start_pos[0]][start_pos[1]] = NullPiece.new
         self[start_pos] = NullPiece.new
     end
 
@@ -64,9 +64,8 @@ class Board
         self[pos].is_a?(NullPiece) 
     end
 
-    #Display.new(Board.new).render
     def render(cursor_pos, selected)
-        puts "  " + ('a'..'h').to_a.join("    ")
+        puts "   " + ('a'..'h').to_a.join("    ")
         grid.each_with_index do |row, i|
             string = "#{8-i} "
             row.each_with_index do |position, j|
@@ -82,7 +81,21 @@ class Board
                 string += "    "
             end
 
-            puts string
+            puts "\n #{string}"
         end
+    end
+
+    private
+    def special_row(color)
+        row = []
+        row << Rook.new(self, color)
+        row << Knight.new(self, color)
+        row << Bishop.new(self, color)
+        row << Queen.new(self, color)
+        row << King.new(self, color)
+        row << Bishop.new(self, color)
+        row << Knight.new(self, color)
+        row << Rook.new(self, color)
+        row
     end
 end
