@@ -46,15 +46,19 @@ class Board
     end
 
     #Display.new(Board.new).render
-    def render(cursor_pos)
+    def render(cursor_pos, selected)
         puts "  " + (0..7).to_a.join("    ")
         grid.each_with_index do |row, i|
             string = "#{i} "
             row.each_with_index do |position, j|
                 if [i,j] == cursor_pos
-                    string += "#{position}".colorize(:color => :blue, :background => :light_magenta)
+                    if selected 
+                        string += "#{position}".colorize(:color => :red, :background => :blue)
+                    else
+                        string += "#{position}".colorize(:color => :blue, :background => :light_magenta)
+                    end
                 else
-                    string += "#{position}".colorize(position.select_color)
+                    string += "#{position}".colorize(position.select_color) 
                 end
                 string += "    "
             end

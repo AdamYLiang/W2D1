@@ -14,16 +14,11 @@ class Piece
     def initialize(color = "white", name = "n")
         @color = COLORS[color]
         @name = name
-        @selected = false
     end
     #colorize why you no work
 
     def select_color
         selected ? :red : color
-    end
-
-    def toggle_selected
-        selected = !selected
     end
 
     def to_s    

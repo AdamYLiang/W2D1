@@ -38,6 +38,11 @@ class Cursor
   def initialize(cursor_pos, board)
     @cursor_pos = cursor_pos
     @board = board
+    @selected = false
+  end
+
+  def toggle_selected 
+    @selected = !@selected
   end
 
   def get_input
@@ -79,6 +84,7 @@ class Cursor
   def handle_key(key)
     case key
     when :return, :space
+      toggle_selected
       return @cursor_pos
     when :left, :right, :up, :down
       update_pos(MOVES[key])
@@ -91,10 +97,8 @@ class Cursor
 
   def update_pos(diff)
    move = @cursor_pos.map.with_index { |el,idx | el + diff[idx] } 
-   #board.move_piece(@cursor_pos, move) if board.valid_pos?(move)
-  #  puts "updating move"
-   @cursor_pos = move
-   #puts @cursor_pos
+   @cursor_pos = move if board.valid_pos?(move)
+   #TODO: valid moves 
   end
   
 end

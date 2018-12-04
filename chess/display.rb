@@ -9,13 +9,14 @@ class Display
     end
 
     def render
-        until @cursor.get_input == @cursor.cursor_pos
+        #until @cursor.get_input == @cursor.cursor_pos
+        while true
             system('clear')
-            @board.render(@cursor.cursor_pos)
+            @board.render(@cursor.cursor_pos, @cursor.selected)
             @cursor.get_input
             #toggle here
             system('clear')
-            @board.render(@cursor.cursor_pos)
+            @board.render(@cursor.cursor_pos, @cursor.selected)
 
         end
     end
