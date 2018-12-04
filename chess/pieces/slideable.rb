@@ -43,8 +43,7 @@ module Slideable
         loop do
             x = x + dx
             y = y + dy
-            puts @board.valid_pos?([x,y])
-            #puts "this is board pos #{@board[[x,y]].color} at #{x} #{y}"
+            
             break unless @board.valid_pos?([x,y])
             
             if @board.empty?([x,y])

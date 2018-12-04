@@ -20,7 +20,6 @@ class Piece
         :null => "\u2603"
     }
 
-    #NullPiece is white since terminal is white
     def initialize(board, color = "white", symbol = :null)
         @color = COLORS[color]
         @symbol = PIECES[symbol]

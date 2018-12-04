@@ -10,15 +10,16 @@ class Board
     def place_pieces
         array = []
 
-
-        2.times do |i|
-            array << Array.new(8){Rook.new(self, "black")}
-        end
+        array << Array.new(8){Pawn.new(self, "black")}
+        array << Array.new(8){Pawn.new(self, "white")}
+        # 2.times do |i|
+        #     array << Array.new(8){Pawn.new(self, "black")}
+        # end
         4.times do |i|
             array << Array.new(8){NullPiece.new(self, "white")}
         end
         2.times do |i|
-            array << Array.new(8){Piece.new(self, "white")}
+            array << Array.new(8){Bishop.new(self, "white")}
         end
 
         
@@ -29,7 +30,6 @@ class Board
         (0..7).each do |i|
             (0..7).each do |j|
                 next if grid[i][j].is_a?(NullPiece)
-                puts grid[i][j].to_s
                 grid[i][j].pos = [i,j]
             end
         end
