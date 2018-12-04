@@ -1,8 +1,10 @@
 require_relative 'pieces'
 class Board 
     attr_reader :grid
+    attr_accessor :selected_piece
     def initialize
         @grid = place_pieces
+        @selected_piece = nil
         assign_positions
 
     end
@@ -36,14 +38,17 @@ class Board
         end
     end
 
+
     def move_piece(start_pos, end_pos)
         #raise exceptions: no piece at start, can't move to end
-
+        puts "selected piece is #{self[start_pos].pos}"
+        puts "swap piece is #{self[end_pos].pos}"
         raise "No piece at start_pos" if self[start_pos].is_a?(NullPiece)
         raise "Can't move to end_pos" unless self[end_pos].is_a?(NullPiece)
 
-        self[end_pos] = self[start_pos]
-        self[start_pos] = NullPiece.new
+        self[end_pos], self[start_pos] = self[start_pos], self[end_pos]
+        assign_positions
+        @selected_piece = nil
     end
 
     def valid_pos?(pos)
@@ -64,6 +69,28 @@ class Board
         self[pos].is_a?(NullPiece) 
     end
 
+    def in_check?(color)
+        opp_color = color == :white ? :black : :white
+
+        king = @grid.flatten.find{|piece| piece.symbol == 'K' && piece.color == color}
+
+        opp_team = @grid.flatten.select do |piece|
+            piece.color == opp_color
+        end
+
+        opp_team.any? do |piece|
+            piece.valid_moves.include?(king.pos)
+        end
+    end
+
+    def checkmate?(color)
+        if in_check?(color)
+            @grid.flatten.all? do |own_piece|
+                own_piece.valid_moves == []
+            end
+        end
+    end
+        
     def render(cursor_pos, selected)
         puts "   " + ('a'..'h').to_a.join("    ")
         grid.each_with_index do |row, i|

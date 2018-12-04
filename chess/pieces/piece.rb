@@ -38,7 +38,7 @@ class Piece
     end
 
     def valid_moves
-
+        
     end
 
     def pos=(val)
